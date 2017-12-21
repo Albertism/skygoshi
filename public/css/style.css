@@ -1,0 +1,17 @@
+/*body {*/
+  /*padding: 50px;*/
+  /*font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;*/
+/*}*/
+
+/*a {*/
+  /*color: #00B7FF;*/
+/*}*/
+
+.successMsg {
+  color: green;
+  font-size: 12px;
+}
+
+.paramControl {
+  margin-right: 15px;
+}

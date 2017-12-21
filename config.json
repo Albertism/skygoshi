@@ -1,0 +1,8 @@
+{
+  "file" : "${cwd}/reports/TESTS-xunit.xml",
+  "consoleOutput" : {
+    "suite" : true,
+    "test" : true,
+    "fail" : false
+  }
+}

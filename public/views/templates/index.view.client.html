@@ -1,0 +1,128 @@
+<div class="container-fluid" ng-controller="homeController">
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Trip Algorithm</th>
+        </tr>
+
+        <tr>
+            <td>
+                <form watch-element id="csvForm" method="post" action="/api/upload/csv" enctype="multipart/form-data" >
+                    Choose a file to upload:
+                    <br/>
+                    <input type="file" name="myFile" class="btn btn-md btn-default"id="fileUpload" onchange="angular.element(this).scope().model.updateFile()">
+                    <br/>
+                    Choose the date for this trip:
+                    <input type="text" id="jsDatePicker" ng-model="model.pickedDate"/>
+                    <br/>
+                    <input ng-disabled="!model.fileLoaded" type="submit" class="btn btn-default btn-md" value="Upload" id="submit" /> <span class="successMsg" ng-show="model.uploadedPath">File uploaded to {{model.uploadedPath}}</span>
+                    <br/>
+                </form>
+            </td>
+        </tr>
+
+        <tr>
+            <td>
+                <!-- need to implement the RunAlgorithm() function -->
+                <button type="button" style="cursor: pointer" ng-disabled="!(model.fileLoaded && model.uploadedPath)"
+                        class="btn btn-lg btn-default" ng-click="model.parseCSV()">Parse CSV</button>
+                <br/>
+            </td>
+        </tr>
+        <tr ng-show="model.parsedData && !model.presentData">
+            <td>
+                <h3>Input Trips ({{model.dataCount}} trips)</h3>
+                <table id="parsedTable" ng-table="model.parsedData" class="table" show-filter="false">
+                        <tr ng-repeat="t in $data">
+                            <td title="'Trip ID'" >{{t._id}}</td>
+                            <td title="'Subscription'">{{t.subscription}}</td>
+                            <td title="'ADA'">{{t.ada}}</td>
+                            <td title="'Anchor'">{{t.anchor}}</td>
+                            <td title="'Request Time'">{{t.requestTime}}</td>
+                            <td title="'PCAs'">{{t.pca}}</td>
+                            <td title="'Companions'">{{t.companions}}</td>
+                            <td title="'Service Animal'">{{t.serviceAnimal}}</td>
+                            <td title="'Pickup House Number'">{{t.pickHouseNumber}}</td>
+                            <td title="'Pickup Address'">{{t.pickAddress1}}</td>
+                            <td title="'Pickup City'">{{t.pickCity}}</td>
+                            <td title="'Pickup Zipcode'">{{t.pickZip}}</td>
+                            <td title="'Drop House Number'">{{t.dropHouseNumber}}</td>
+                            <td title="'Drop Address'">{{t.dropAddress1}}</td>
+                            <td title="'Drop City'">{{t.dropCity}}</td>
+                            <td title="'Drop Zipcode'">{{t.dropZip}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-show="model.parsedData">
+            <td>
+                <h3>Trip Algorithm Parameters</h3> <br/>
+                <form id="algorithmParams">
+                    Slice Time: <input class="paramControl" type="text" ng-model="model.sliceTime">
+                    Cluster Time: <input class="paramControl" type="text" ng-model="model.clusterTime">
+                    Bearing Difference: <input class="paramControl" type="text" ng-model="model.bearingDiff">
+                </form>
+            </td>
+        </tr>
+        <tr ng-show="model.parsedData">
+            <td><button type="button" style="cursor: pointer" ng-disabled="!model.sliceTime || !model.clusterTime || !model.bearingDiff"
+                        class="btn btn-lg btn-default " ng-click="model.runAlgorithm()">Run Algorithm</button>
+
+            </td>
+        </tr>
+        <tr ng-show="model.presentData">
+            <td>
+                <h3>Output Trips (took {{model.timeTaken}} seconds)</h3>
+                <table id="resultTable" ng-table="model.presentData" class="table" show-filter="false">
+                    <tr ng-repeat="route in $data">
+                        <td title="'Trip Ends(5:00AM + x minutes)'" >{{route.time}}</td>
+                        <td title="'Zipcde End'" >{{route.zip}}</td>
+                        <td title="'Trips in cluster'">{{route.clusters[0].trips.length}}</td>
+                    </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr ng-show="model.presentData">
+            <td>
+                <h5>Input trips : {{model.dataCount}} </h5>
+            </td>
+        </tr>
+        <tr ng-show="model.presentData">
+            <td>
+                <h5>Total trips in route: {{model.routeCount}} </h5>
+            </td>
+        </tr>
+        <tr ng-show="model.presentData">
+            <td>
+                <h5>Total trips handed over to third party: {{model.aloneCount}}</h5>
+            </td>
+        </tr>
+
+        <!--<tr>-->
+            <!--<td>-->
+                <!--&lt;!&ndash;-->
+                     <!--if we choose to have multiple files we might be able to place them in a zip file-->
+                        <!--https://stackoverflow.com/questions/9183312/how-to-add-checkbox-array-to-zip-file-for-download-from-a-form-->
+                <!--&ndash;&gt;-->
+                <!--<form action="path" method="get">-->
+                    <!--<h3>Output</h3>-->
+                    <!--<input type="checkbox" id="SkyGoshiWebsiteCheck" name="RideFile">-->
+                    <!--<label for="SkyGoshiWebsiteCheck">The RIDE CSV</label>-->
+                    <!--<br/>-->
+
+                    <!--<input type="checkbox" id="NDPCheck" name="NDPFile">-->
+                    <!--<label for="NDPCheck">Non-Designated Providers CSV</label>-->
+                    <!--<br/>-->
+
+                    <!--<input type="submit" value="Download" id="download" />-->
+
+                <!--</form>-->
+            <!--</td>-->
+        <!--</tr>-->
+
+        </thead>
+        <iframe style="display:none" name="my_iframe"></iframe>
+    </table>
+</div>
